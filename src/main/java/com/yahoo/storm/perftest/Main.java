@@ -17,6 +17,10 @@
 package com.yahoo.storm.perftest;
 
 import java.util.Map;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.OutputStreamWriter;
+import java.io.BufferedWriter;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -206,6 +210,15 @@ public class Main {
     state.transferred = totalTransferred;
     double throughput = (transferredDiff == 0 || time == 0) ? 0.0 : (transferredDiff * size)/(1024.0 * 1024.0)/(time/1000.0);
     System.out.println(message+"\t"+numTopologies+"\t"+totalSlots+"\t"+totalUsedSlots+"\t"+totalExecutors+"\t"+executorsWithMetrics+"\t"+now+"\t"+time+"\t"+transferredDiff+"\t"+throughput+"\t"+totalFailed);
+    
+    System.out.println ("Writing into file now!");
+    File fout = new File("/home/yangyang/Downloads/storm-metrics/DefaultScheduler.txt");
+    FileOutputStream fos = new FileOutputStream(fout);
+    BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(fos));
+    bw.write(Double.toString(throughput));
+    bw.newLine();
+    bw.close();
+    
     if ("WAITING".equals(message)) {
       //System.err.println(" !("+totalUsedSlots+" > 0 && "+slotsUsedDiff+" == 0 && "+totalExecutors+" > 0 && "+executorsWithMetrics+" >= "+totalExecutors+")");
     }
